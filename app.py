@@ -47,6 +47,10 @@ def create_event():
 
 
 
+@app.route("/")
+def home():
+    return "Hello World!"
+
 #@cross_origin()    
 @app.route('/events', methods = ['GET'])
 def getevents():
