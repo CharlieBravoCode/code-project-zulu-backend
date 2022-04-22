@@ -9,7 +9,7 @@ app = Flask(__name__)
 #CORS(app)
 
 
-DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = os.environ['postgres://kmsrexvzdwejei:a375072228ebc01633018d08896273d133f1178f2b5eed57705a5f19e562a39f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/dahqvr1vpumlpc']
 
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
