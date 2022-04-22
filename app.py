@@ -1,10 +1,18 @@
 from flask import Flask, jsonify,request, abort
 from flask_sqlalchemy import SQLAlchemy
+import os
+import psycopg2
 #from flask_cors import CORS, cross_origin
 
 
 app = Flask(__name__)
 #CORS(app)
+
+
+DATABASE_URL = os.environ['DATABASE_URL']
+
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
 
 #### Database in Local Setup ####
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:seglniosi3ng9834ogno3ngkldowuez!$rmfmrRJjmelsmfdjUfnerurnfsegom490zj498t23nto(ugneukgbekgdj@localhost/zulu_db_postgres'
