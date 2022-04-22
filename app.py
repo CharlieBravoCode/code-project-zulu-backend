@@ -10,7 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres://kmsrex
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-if __name__ == '__main__':
+if __name__ == '__app__':
   app.run(debug=True)
 
 
