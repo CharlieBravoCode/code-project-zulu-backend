@@ -2,12 +2,19 @@ from flask import Flask, jsonify,request, abort
 from flask_sqlalchemy import SQLAlchemy
 import os
 import psycopg2
-#from flask_cors import CORS, cross_origin
+from flask_cors import CORS, cross_origin
 
 
 app = Flask(__name__)
-#CORS(app)
+CORS(app)
 
+cors= CORS(app, resources={
+    r"/*": {
+        "origins": "https://code-project-zulu-cdc39ru51-charliebravocode.vercel.app"
+        }
+       }
+    )
+    
 
 DATABASE_URL = os.environ['DATABASE_URL']
 
@@ -47,7 +54,7 @@ class Events(db.Model):
         return "<Event %r>" % self.title 
 
 
-#@cross_origin()
+@cross_origin()
 @app.route('/events', methods = ['POST'])
 def create_event():
     event_data = request.json
@@ -66,12 +73,12 @@ def create_event():
     return jsonify({"success": True,"response":"Event added"})
 
 
-
+@cross_origin()  
 @app.route("/")
 def home():
     return "Hello World!"
 
-#@cross_origin()    
+@cross_origin()    
 @app.route('/events', methods = ['GET'])
 def getevents():
      all_events = []
@@ -90,7 +97,7 @@ def getevents():
      return jsonify(all_events)
 
 
-#@cross_origin() 
+@cross_origin() 
 @app.route('/events/geojson', methods = ['GET'])
 def geteventsgeojson():
         points = []
@@ -113,7 +120,7 @@ def geteventsgeojson():
 
 
 
-#@cross_origin()  
+@cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["PUT"])
 def update_event(event_id):
     event = Events.query.get(event_id)
@@ -136,7 +143,7 @@ def update_event(event_id):
         return jsonify({"success": True, "response": "Event Details updated"})
 
 
-#@cross_origin()  
+@cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["DELETE"])
 def delete_event(event_id):
     event = Events.query.get(event_id)
