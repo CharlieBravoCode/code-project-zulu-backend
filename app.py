@@ -13,12 +13,18 @@ DATABASE_URL = os.environ['DATABASE_URL']
 
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
-
 #### Database in Local Setup ####
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:seglniosi3ng9834ogno3ngkldowuez!$rmfmrRJjmelsmfdjUfnerurnfsegom490zj498t23nto(ugneukgbekgdj@localhost/zulu_db_postgres'
 
 #### Database in Heroku Setup ####
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://kmsrexvzdwejei:a375072228ebc01633018d08896273d133f1178f2b5eed57705a5f19e562a39f@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/dahqvr1vpumlpc'
+os.environ['DATABASE_URL'] = 'postgresql://iblhdktfqmapza:6a8b46b627797e8879823eccde4731f392eaf852ca37a742b1be3e8fe1c1c531@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dfeftmig21ojqf'
+
+SQLAlchemy_DATABASE_URI = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLAlchemy_DATABASE_URI
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://iblhdktfqmapza:6a8b46b627797e8879823eccde4731f392eaf852ca37a742b1be3e8fe1c1c531@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dfeftmig21ojqf'
 
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
