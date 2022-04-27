@@ -15,8 +15,6 @@ app = Flask(__name__)
 CORS(app)
 
 
-
-
 #______________________ CORS ______________________ #
 
 cors= CORS(app, resources={
