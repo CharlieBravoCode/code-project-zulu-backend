@@ -6,8 +6,7 @@ from flask_cors import CORS, cross_origin
 #from flask_bcrypt import Bcrypt
 #from flask_migrate import Migrate
 
-from models import User, Events
-from routes import app
+from models import User
 
 from flask_login import (UserMixin, login_user, LoginManager, current_user, logout_user, login_required)
 
