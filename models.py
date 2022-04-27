@@ -1,5 +1,5 @@
 from app import db
-from flask_login import (UserMixin, login_user, LoginManager, current_user, logout_user, login_required)
+from flask_login import UserMixin
 
 class Events(db.Model):
     __tablename__ = 'events'

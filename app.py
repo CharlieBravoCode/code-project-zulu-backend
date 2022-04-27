@@ -6,7 +6,6 @@ from flask_cors import CORS, cross_origin
 #from flask_bcrypt import Bcrypt
 #from flask_migrate import Migrate
 
-from models import User
 
 from flask_login import (UserMixin, login_user, LoginManager, current_user, logout_user, login_required)
 
@@ -69,32 +68,6 @@ login_manager.init_app(app)
 #______________________ Routes ______________________ #
 
 
-#____________Routes - User Login_______________ #
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
-@cross_origin()
-@app.route('/login', methods=['POST'])
-def login():
-    user_data = request.json
-
-    username = user_data['username']
-    password = user_data['password']
-
-    user = User.query.filter_by(username=username).first()
-
-    if user.username == username and user.password == password:
-        login_user(user)
-        return jsonify({'username': user.username})
-
-
-
-
-
-#____________Routes - Content_______________ #
 
 
 

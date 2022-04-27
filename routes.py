@@ -3,6 +3,36 @@ from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from app import db, app
 from models import User, Events
+from flask_login import login_manager
+
+
+
+#____________Routes - User Login_______________ #
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+@cross_origin()
+@app.route('/login', methods=['POST'])
+def login():
+    user_data = request.json
+
+    username = user_data['username']
+    password = user_data['password']
+
+    user = User.query.filter_by(username=username).first()
+
+    if user.username == username and user.password == password:
+        login_user(user)
+        return jsonify({'username': user.username})
+
+
+
+
+
+#____________Routes - Content_______________ #
 
 
 @cross_origin()
