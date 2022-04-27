@@ -3,8 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import psycopg2
 from flask_cors import CORS, cross_origin
-from flask_bcrypt import Bcrypt
-from flask_migrate import Migrate
+#from flask_bcrypt import Bcrypt
+#from flask_migrate import Migrate
 
 from flask_login import (UserMixin, login_user, LoginManager, current_user, logout_user, login_required)
 
