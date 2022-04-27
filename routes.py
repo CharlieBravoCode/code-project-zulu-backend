@@ -2,6 +2,7 @@ from flask import Flask, jsonify,request
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
 from app import db, app
+from models import User, Events
 
 
 @cross_origin()
