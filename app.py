@@ -14,8 +14,7 @@ from flask_login import (UserMixin, login_user, LoginManager, current_user, logo
 app = Flask(__name__)
 CORS(app)
 
-if __name__ == '__app__':
-  app.run(debug=True)
+
 
 
 #______________________ CORS ______________________ #
@@ -225,4 +224,5 @@ def delete_event(event_id):
 
 
 
-
+if __name__ == '__app__':
+  app.run(debug=True)
