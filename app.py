@@ -1,4 +1,5 @@
-from flask import Flask, jsonify,request
+from urllib import response
+from flask import Flask, jsonify, make_response,request, session, abort
 from flask_sqlalchemy import SQLAlchemy
 import os
 import psycopg2
@@ -14,6 +15,7 @@ from flask_login import UserMixin, login_user, LoginManager, current_user, logou
 #______________________  App ______________________ #
 app = Flask(__name__)
 CORS(app)
+app.secret_key = 'ewilgfnoguoe4nrkvnjsnielngoigo4gnnvoilIWFUWBGW93giownglesngjln3ljn3oin((nifneifnldkne'
 
 
 #______________________ CORS ______________________ #
@@ -28,7 +30,9 @@ cors= CORS(app, resources={
 
 #______________________ Database Connection Config ______________________ #
 
-#### Database in Heroku Setup ####
+db = SQLAlchemy(app)
+
+#### Database in Heroku  ####
 
 os.environ['DATABASE_URL'] = 'postgresql://iblhdktfqmapza:6a8b46b627797e8879823eccde4731f392eaf852ca37a742b1be3e8fe1c1c531@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dfeftmig21ojqf'
 
@@ -41,9 +45,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLAlchemy_DATABASE_URI
 SECRET_KEY = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://iblhdktfqmapza:6a8b46b627797e8879823eccde4731f392eaf852ca37a742b1be3e8fe1c1c531@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dfeftmig21ojqf'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
 
-#### Database in Local Setup ####
+#### Database Local ####
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:seglniosi3ng9834ogno3ngkldowuez!$rmfmrRJjmelsmfdjUfnerurnfsegom490zj498t23nto(ugneukgbekgdj@localhost/zulu_db_postgres'
 
 
@@ -52,8 +55,8 @@ login_manager = LoginManager()
 login_manager.session_protection = "strong"
 login_manager.login_view = "login"
 login_manager.login_message_category = "info"
-
 login_manager.init_app(app)
+
 #db.init_app(app)
 #Migrate.init_app(app, db)
 #Bcrypt.init_app(app)
@@ -87,6 +90,9 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return '<User %r>' % self.username
+    
+    def get_id(self):
+            return str(self.id)
 
 
 
@@ -95,23 +101,50 @@ class User(db.Model, UserMixin):
 #____________Routes - User Login_______________ #
 
 @login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+def load_user(id):
+    try:
+        return User.query.get(int(id))
+    except:
+        return None
+
+
+def login_user():
+    return current_user.is_authenticated
 
 
 @cross_origin()
-@app.route('/login', methods=['POST'])
+@app.route('/auth/login', methods=['POST'])
 def login():
+    session.pop('id', None)
+    
     user_data = request.json
+    shitusername = user_data['username']
+    shitpassword = user_data['password']
 
-    username = user_data['username']
-    password = user_data['password']
+    print(f'This is the username: {shitusername}')
+    print(f'This is the password: {shitpassword}')
 
-    user = User.query.filter_by(username=username).first()
+    #user = User.query.filter_by(username = username).first()
+    user = db.session.query(User).filter_by(username=shitusername).first()
+    print(f'This is user: {user}')
+    print(f'This is user.username: {user.username}')
+    print(f'This is user.password: {user.password}')
 
-    if user.username == username and user.password == password:
-        login_user(user)
-        return jsonify({'username': user.username})
+    if user is not None and user.username == shitusername and user.password == shitpassword:
+        login_user()
+        session['id'] = user.id
+
+    # return a response with the a cookie and the user's id
+        resp = make_response(jsonify({'message': 'Logged in successfully'}))
+        resp.set_cookie('user_id', value=str(user.id), domain=".code-project-zulu.vercel.app")
+        print(f'This is the cookie: {resp}')
+        return resp
+    else:
+        return jsonify({'error': 'Invalid username or password'})
+
+
+
+
 
 
 
@@ -121,6 +154,7 @@ def login():
 
 
 @cross_origin()
+@login_required
 @app.route('/events', methods = ['POST'])
 def create_event():
     event_data = request.json
@@ -223,5 +257,10 @@ def delete_event(event_id):
 
 
 
+
+
+#____________Other_______________ #
+
 if __name__ == '__app__':
   app.run(debug=True)
+  
