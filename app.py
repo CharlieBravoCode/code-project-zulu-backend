@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import psycopg2
 from flask_cors import CORS, cross_origin
+from .auth import AuthError, requires_auth
+
 #from flask_bcrypt import Bcrypt
 #from flask_migrate import Migrate
 
@@ -156,6 +158,7 @@ def login():
 @cross_origin()
 @login_required
 @app.route('/events', methods = ['POST'])
+@requires_auth
 def create_event():
     event_data = request.json
 
@@ -175,11 +178,13 @@ def create_event():
 
 @cross_origin()  
 @app.route("/")
+@requires_auth
 def home():
     return "Hello World!"
 
 @cross_origin()    
 @app.route('/events', methods = ['GET'])
+@requires_auth
 def getevents():
      all_events = []
      events = Events.query.all()
@@ -199,6 +204,7 @@ def getevents():
 
 @cross_origin() 
 @app.route('/events/geojson', methods = ['GET'])
+@requires_auth
 def geteventsgeojson():
         points = []
         events = Events.query.all()
@@ -222,6 +228,7 @@ def geteventsgeojson():
 
 @cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["PUT"])
+@requires_auth
 def update_event(event_id):
     event = Events.query.get(event_id)
     identifier = request.json['identifier']
@@ -245,6 +252,7 @@ def update_event(event_id):
 
 @cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["DELETE"])
+@requires_auth
 def delete_event(event_id):
     event = Events.query.get(event_id)
 
@@ -257,9 +265,14 @@ def delete_event(event_id):
 
 
 
-
-
 #____________Other_______________ #
+
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
+
 
 if __name__ == '__app__':
   app.run(debug=True)
