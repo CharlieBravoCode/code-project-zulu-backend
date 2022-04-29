@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import psycopg2
 from flask_cors import CORS, cross_origin
-from .auth import AuthError, requires_auth
+from auth import AuthError, requires_auth
 
 #from flask_bcrypt import Bcrypt
 #from flask_migrate import Migrate
