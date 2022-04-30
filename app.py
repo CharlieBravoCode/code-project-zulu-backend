@@ -1,24 +1,18 @@
-from urllib import response
 from flask import Flask, jsonify, make_response,request, session, abort
+from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
-import os
-import psycopg2
 from flask_cors import CORS, cross_origin
 from auth import AuthError, requires_auth
-
-#from flask_bcrypt import Bcrypt
-#from flask_migrate import Migrate
-
-
-from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
+import psycopg2
+import os
 
 
 
 #______________________  App ______________________ #
+
 app = Flask(__name__)
 CORS(app)
 app.secret_key = 'ewilgfnoguoe4nrkvnjsnielngoigo4gnnvoilIWFUWBGW93giownglesngjln3ljn3oin((nifneifnldkne'
-
 
 #______________________ CORS ______________________ #
 
@@ -28,7 +22,6 @@ cors= CORS(app, resources={
         }
        }
     ) 
-
 
 #______________________ Database Connection Config ______________________ #
 
@@ -53,16 +46,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 #______________________ User Login Set-Up ______________________ #
+
 login_manager = LoginManager()
 login_manager.session_protection = "strong"
 login_manager.login_view = "login"
 login_manager.login_message_category = "info"
 login_manager.init_app(app)
-
-#db.init_app(app)
-#Migrate.init_app(app, db)
-#Bcrypt.init_app(app)
-
 
 
 #______________________ Database Tables ______________________ #
@@ -97,63 +86,9 @@ class User(db.Model, UserMixin):
             return str(self.id)
 
 
-
 #______________________ Routes ______________________ #
 
-#____________Routes - User Login_______________ #
-
-@login_manager.user_loader
-def load_user(id):
-    try:
-        return User.query.get(int(id))
-    except:
-        return None
-
-
-def login_user():
-    return current_user.is_authenticated
-
-
-@cross_origin()
-@app.route('/auth/login', methods=['POST'])
-def login():
-    session.pop('id', None)
-    
-    user_data = request.json
-    shitusername = user_data['username']
-    shitpassword = user_data['password']
-
-    print(f'This is the username: {shitusername}')
-    print(f'This is the password: {shitpassword}')
-
-    #user = User.query.filter_by(username = username).first()
-    user = db.session.query(User).filter_by(username=shitusername).first()
-    print(f'This is user: {user}')
-    print(f'This is user.username: {user.username}')
-    print(f'This is user.password: {user.password}')
-
-    if user is not None and user.username == shitusername and user.password == shitpassword:
-        login_user()
-        session['id'] = user.id
-
-    # return a response with the a cookie and the user's id
-        resp = make_response(jsonify({'message': 'Logged in successfully'}))
-        resp.set_cookie('user_id', value=str(user.id), domain=".code-project-zulu.vercel.app")
-        print(f'This is the cookie: {resp}')
-        return resp
-    else:
-        return jsonify({'error': 'Invalid username or password'})
-
-
-
-
-
-
-
-
-
 #____________Routes - Content_______________ #
-
 
 @cross_origin()
 @login_required
@@ -170,8 +105,7 @@ def create_event():
   
     event = Events(identifier = identifier, title = title, location = location, latitud = latitud, longitud = longitud)
     db.session.add(event)
-    db.session.commit()
-    
+    db.session.commit()    
 
     return jsonify({"success": True,"response":"Event added"})
 
@@ -181,6 +115,7 @@ def create_event():
 @requires_auth
 def home():
     return "Hello World!"
+
 
 @cross_origin()    
 @app.route('/events', methods = ['GET'])
@@ -250,6 +185,7 @@ def update_event(event_id):
         return jsonify({"success": True, "response": "Event Details updated"})
 
 
+
 @cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["DELETE"])
 @requires_auth
@@ -263,6 +199,49 @@ def delete_event(event_id):
         db.session.commit()
         return jsonify({"success": True, "response": "Event Deleted"})
 
+
+
+#____________Routes - User Login_______________ #
+### Not yet fully implemented - currently auth0 in use###
+
+@login_manager.user_loader
+def load_user(id):
+    try:
+        return User.query.get(int(id))
+    except:
+        return None
+
+
+def login_user():
+    return current_user.is_authenticated
+
+
+@cross_origin()
+@app.route('/auth/login', methods=['POST'])
+def login():
+    session.pop('id', None)
+    
+    user_data = request.json
+    username = user_data['username']
+    password = user_data['password']
+
+    #user = User.query.filter_by(username = username).first()
+    user = db.session.query(User).filter_by(username=username).first()
+    print(f'This is user: {user}')
+    print(f'This is user.username: {user.username}')
+    print(f'This is user.password: {user.password}')
+
+    if user is not None and user.username == username and user.password == password:
+        login_user()
+        session['id'] = user.id
+
+    # return a response with the a cookie and the user's id
+        resp = make_response(jsonify({'message': 'Logged in successfully'}))
+        resp.set_cookie('user_id', value=str(user.id), domain=".code-project-zulu.vercel.app")
+        print(f'This is the cookie: {resp}')
+        return resp
+    else:
+        return jsonify({'error': 'Invalid username or password'})
 
 
 #____________Other_______________ #
