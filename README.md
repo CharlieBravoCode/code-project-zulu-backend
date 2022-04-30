@@ -97,4 +97,18 @@ christoph.brauer@code.berlin
 
 </br>
 
+# Zulu Git Repositories
+### [Frontend](https://github.com/CharlieBravoCode/code-project-zulu-frontend)    
+```bash
+git clone https://github.com/CharlieBravoCode/code-project-zulu-frontend.git
+```
+### [Backend](https://github.com/CharlieBravoCode/code-project-zulu-backend)    
+```bash
+git clone https://github.com/CharlieBravoCode/code-project-zulu-backend.git
+```
+### [Former Monorepo (deprecated)](https://github.com/CharlieBravoCode/Zulu)    
+```bash
+git clone https://github.com/CharlieBravoCode/Zulu.git
+```
+
 ---------------
