@@ -9,7 +9,7 @@ from urllib.request import urlopen
 
 AUTH0_DOMAIN = 'dev-l5guaxfx.eu.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'https://code-project-zulu-backend.herokuapp.com/'
+API_AUDIENCE = 'https://code-project-zulu-backend.herokuapp.com/', 'http://localhost:5000'
 
 
 #______________________  Error Class ______________________ #
