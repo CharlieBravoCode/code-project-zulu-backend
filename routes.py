@@ -1,9 +1,18 @@
 from app import app
-from flask_cors import CORS, cross_origin
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Blueprint
+from flask_sqlalchemy import SQLAlchemy
+from flask_oidc import OpenIDConnect
+import requests
+import json
 
 
-@cross_origin()
+
+
+
+
+
+
+
 @app.route('/events', methods = ['POST'])
 def create_event():
     event_data = request.json
@@ -21,13 +30,13 @@ def create_event():
     return jsonify({"success": True,"response":"Event added"})
 
 
-@cross_origin()  
+
 @app.route("/")
 def home():
     return "Hello World!"
 
 
-@cross_origin()    
+   
 @app.route('/events', methods = ['GET'])
 def getevents():
      all_events = []
@@ -46,7 +55,7 @@ def getevents():
      return jsonify(all_events)
 
 
-@cross_origin() 
+
 @app.route('/events/geojson', methods = ['GET'])
 def geteventsgeojson():
         points = []
@@ -69,7 +78,7 @@ def geteventsgeojson():
 
 
 
-@cross_origin()  
+
 @app.route("/events/<int:event_id>", methods = ["PUT"])
 def update_event(event_id):
     event = Events.query.get(event_id)
@@ -92,8 +101,6 @@ def update_event(event_id):
         return jsonify({"success": True, "response": "Event Details updated"})
 
 
-
-@cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["DELETE"])
 def delete_event(event_id):
     event = Events.query.get(event_id)
@@ -104,4 +111,6 @@ def delete_event(event_id):
         db.session.delete(event)
         db.session.commit()
         return jsonify({"success": True, "response": "Event Deleted"})
+
+
 
