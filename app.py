@@ -12,7 +12,7 @@ import os
 
 app = Flask(__name__)
 CORS(app)
-app.secret_key = 'ewilgfnoguoe4nrkvnjsnielngoigo4gnnvoilIWFUWBGW93giownglesngjln3ljn3oin((nifneifnldkne'
+# app.secret_key = 'ewilgfnoguoe4nrkvnjsnielngoigo4gnnvoilIWFUWBGW93giownglesngjln3ljn3oin((nifneifnldkne'
 
 #______________________ CORS ______________________ #
 
@@ -27,19 +27,31 @@ cors= CORS(app, resources={
 
 db = SQLAlchemy(app)
 
+#### Local Dev Postgres Docker ####
+
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+app.config['SECRET_KEY'] = 'mysecretkey'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres@localhost:5432'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mysecretpassword@localhost:5432'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+
 #### Database in Heroku  ####
 
-os.environ['DATABASE_URL'] = 'postgresql://iblhdktfqmapza:6a8b46b627797e8879823eccde4731f392eaf852ca37a742b1be3e8fe1c1c531@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dfeftmig21ojqf'
+# os.environ['DATABASE_URL'] = 'postgresql://iblhdktfqmapza:6a8b46b627797e8879823eccde4731f392eaf852ca37a742b1be3e8fe1c1c531@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dfeftmig21ojqf'
 
-DATABASE_URL = os.environ['DATABASE_URL']
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+# DATABASE_URL = os.environ['DATABASE_URL']
+# conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
-SQLAlchemy_DATABASE_URI = os.environ['DATABASE_URL']
-app.config['SQLALCHEMY_DATABASE_URI'] = SQLAlchemy_DATABASE_URI
+# SQLAlchemy_DATABASE_URI = os.environ['DATABASE_URL']
+# app.config['SQLALCHEMY_DATABASE_URI'] = SQLAlchemy_DATABASE_URI
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://iblhdktfqmapza:6a8b46b627797e8879823eccde4731f392eaf852ca37a742b1be3e8fe1c1c531@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dfeftmig21ojqf'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# SECRET_KEY = os.environ.get('SECRET_KEY')
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://iblhdktfqmapza:6a8b46b627797e8879823eccde4731f392eaf852ca37a742b1be3e8fe1c1c531@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dfeftmig21ojqf'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 #### Database Local ####
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:seglniosi3ng9834ogno3ngkldowuez!$rmfmrRJjmelsmfdjUfnerurnfsegom490zj498t23nto(ugneukgbekgdj@localhost/zulu_db_postgres'
@@ -91,9 +103,9 @@ class User(db.Model, UserMixin):
 #____________Routes - Content_______________ #
 
 @cross_origin()
-@login_required
+# @login_required
 @app.route('/events', methods = ['POST'])
-@requires_auth
+# @requires_auth
 def create_event():
     event_data = request.json
 
@@ -112,14 +124,14 @@ def create_event():
 
 @cross_origin()  
 @app.route("/")
-@requires_auth
+# @requires_auth
 def home():
     return "Hello World!"
 
 
 @cross_origin()    
 @app.route('/events', methods = ['GET'])
-@requires_auth
+# @requires_auth
 def getevents():
      all_events = []
      events = Events.query.all()
@@ -139,7 +151,7 @@ def getevents():
 
 @cross_origin() 
 @app.route('/events/geojson', methods = ['GET'])
-@requires_auth
+# @requires_auth
 def geteventsgeojson():
         points = []
         events = Events.query.all()
@@ -163,7 +175,7 @@ def geteventsgeojson():
 
 @cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["PUT"])
-@requires_auth
+# @requires_auth
 def update_event(event_id):
     event = Events.query.get(event_id)
     identifier = request.json['identifier']
@@ -188,7 +200,7 @@ def update_event(event_id):
 
 @cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["DELETE"])
-@requires_auth
+# @requires_auth
 def delete_event(event_id):
     event = Events.query.get(event_id)
 
