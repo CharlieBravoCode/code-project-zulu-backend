@@ -27,10 +27,10 @@ cors= CORS(app, resources={
 
 db = SQLAlchemy(app)
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 #### Local Dev Postgres Docker ####
 
-
-basedir = os.path.abspath(os.path.dirname(__file__))
 
 app.config['SECRET_KEY'] = 'mysecretkey'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres@localhost:5432'
