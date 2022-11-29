@@ -18,20 +18,22 @@ def get_random_id():
 
 class TestRoutes(unittest.TestCase):
 
-        
         def setUp(self):
             self.app = app.test_client()
             self.app.testing = True
             self.client = app.test_client()
     
+
         def test_home(self):
             response = self.app.get('/')
             self.assertEqual(response.status_code, 200)
     
+
         def test_getevents(self):
             response = self.app.get('/events')
             self.assertEqual(response.status_code, 200)
     
+
         def test_geteventsgeojson(self):
             response = self.app.get('/events/geojson')
             self.assertEqual(response.status_code, 200)
@@ -41,10 +43,11 @@ class TestRoutes(unittest.TestCase):
             response = self.app.post('/events', json = {"identifier":"lginwr","title":"test","location":4,"latitud":28.50,"longitud":-96.58})
             self.assertEqual(response.status_code, 200)
 
-        # def test_create_event with id = 1
+
         def test_create_event_with_id_1(self):
             response = self.app.post('/events', json = {"id":1,"identifier":"lginwr","title":"test","location":4,"latitud":28.50,"longitud":-96.58})
             self.assertEqual(response.status_code, 200)
+
 
         def test_update_event(self):
             res = self.client.put('/events/5', json={
