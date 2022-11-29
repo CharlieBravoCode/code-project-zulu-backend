@@ -27,7 +27,12 @@ class TestRoutes(unittest.TestCase):
         def test_home(self):
             response = self.app.get('/')
             self.assertEqual(response.status_code, 200)
-    
+
+
+        def test_home_hello_world(self):
+            response = self.app.get('/')
+            self.assertEqual(response.data, b"Hello World!")
+
 
         def test_getevents(self):
             response = self.app.get('/events')
