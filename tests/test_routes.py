@@ -3,7 +3,19 @@ from app import app, Events
 from flask import json, jsonify
 
 
-def get_random_id():
+def get_random_id_1():
+     all_events = []
+     events = Events.query.all()
+     for event in events:
+          results = {
+                    "id":event.id
+          }
+          all_events.append(results)
+     import random
+     random_id = random.choice(all_events)
+     return random_id
+
+def get_random_id_2():
      all_events = []
      events = Events.query.all()
      for event in events:
@@ -55,7 +67,8 @@ class TestRoutes(unittest.TestCase):
 
 
         def test_update_event(self):
-            res = self.client.put('/events/5', json={
+            random_id = get_random_id_1()
+            res = self.client.put(f'/events/{random_id["id"]}', json={
                 "identifier": "lginwr2",
                 "title": "test",
                 "location": "6", 
@@ -74,7 +87,7 @@ class TestRoutes(unittest.TestCase):
 
 
         def test_delete_event(self):
-            random_id = get_random_id()
+            random_id = get_random_id_2()
             res = self.client.delete(f'/events/{random_id["id"]}')
             data = json.loads(res.data)
 
