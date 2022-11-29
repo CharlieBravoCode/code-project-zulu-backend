@@ -75,7 +75,7 @@ class TestRoutes(unittest.TestCase):
                 "latitud": 0.0,
                 "longitud": 0.0
                 })
-            data = json.loads(res.data)
+            data = json.loads(res.data.decode('utf-8'))
 
             self.assertEqual(res.status_code, 200)
             self.assertEqual(data['success'], True)
