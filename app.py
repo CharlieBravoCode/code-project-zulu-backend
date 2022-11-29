@@ -3,6 +3,8 @@ from flask_login import UserMixin, login_user, LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 import os
+from cors import setup_cors
+
 
 
 
@@ -12,20 +14,13 @@ import os
 app = Flask(__name__)
 CORS(app)
 # app.secret_key = 'ewilgfnoguoe4nrkvnjsnielngoigo4gnnvoilIWFUWBGW93giownglesngjln3ljn3oin((nifneifnldkne'
+setup_cors(app)
 
-#______________________ CORS ______________________ #
 
-cors= CORS(app, resources={
-    r"/*": {
-        "origins": "https://code-project-zulu-cdc39ru51-charliebravocode.vercel.app"
-        }
-       }
-    ) 
 
 #______________________ Database Connection Config ______________________ #
 
 db = SQLAlchemy(app)
-
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 #### Local Dev Postgres Docker ####
