@@ -2,8 +2,9 @@ from flask import Flask, jsonify, make_response,request, session, abort
 from flask_login import UserMixin, login_user, LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
-import os
 from cors import setup_cors
+import os
+
 
 
 
@@ -13,8 +14,9 @@ from cors import setup_cors
 
 app = Flask(__name__)
 CORS(app)
-# app.secret_key = 'ewilgfnoguoe4nrkvnjsnielngoigo4gnnvoilIWFUWBGW93giownglesngjln3ljn3oin((nifneifnldkne'
 setup_cors(app)
+# app.secret_key = 'ewilgfnoguoe4nrkvnjsnielngoigo4gnnvoilIWFUWBGW93giownglesngjln3ljn3oin((nifneifnldkne'
+
 
 
 
@@ -51,15 +53,6 @@ db = SQLAlchemy(app)
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:seglniosi3ng9834ogno3ngkldowuez!$rmfmrRJjmelsmfdjUfnerurnfsegom490zj498t23nto(ugneukgbekgdj@localhost/zulu_db_postgres'
 
 
-#______________________ User Login Set-Up ______________________ #
-
-login_manager = LoginManager()
-login_manager.session_protection = "strong"
-login_manager.login_view = "login"
-login_manager.login_message_category = "info"
-login_manager.init_app(app)
-
-
 #______________________ Database Tables ______________________ #
 
 class Events(db.Model):
@@ -75,21 +68,6 @@ class Events(db.Model):
     def __repr__(self):
         return "<Event %r>" % self.title 
 
-
-class User(db.Model, UserMixin):
-    __tablename__ = "user"
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255), unique=True, nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(255))
-    #active = db.Column(db.Boolean)
-
-    def __repr__(self):
-        return '<User %r>' % self.username
-    
-    def get_id(self):
-            return str(self.id)
 
 
 #______________________ Routes ______________________ #
@@ -205,7 +183,7 @@ def delete_event(event_id):
         db.session.commit()
         return jsonify({"success": True, "response": "Event Deleted"})
 
-# Add the URL '/bad-request' so that it can be handled by the errorhandler.
+
 @cross_origin()  
 @app.route("/bad-request")
 def bad_request():
@@ -213,47 +191,6 @@ def bad_request():
 
 
 
-#____________Routes - User Login_______________ #
-### Not yet fully implemented - currently auth0 in use###
-
-@login_manager.user_loader
-def load_user(id):
-    try:
-        return User.query.get(int(id))
-    except:
-        return None
-
-
-def login_user():
-    return current_user.is_authenticated
-
-
-@cross_origin()
-@app.route('/auth/login', methods=['POST'])
-def login():
-    session.pop('id', None)
-    
-    user_data = request.json
-    username = user_data['username']
-    password = user_data['password']
-
-    #user = User.query.filter_by(username = username).first()
-    user = db.session.query(User).filter_by(username=username).first()
-    print(f'This is user: {user}')
-    print(f'This is user.username: {user.username}')
-    print(f'This is user.password: {user.password}')
-
-    if user is not None and user.username == username and user.password == password:
-        login_user()
-        session['id'] = user.id
-
-    # return a response with the a cookie and the user's id
-        resp = make_response(jsonify({'message': 'Logged in successfully'}))
-        resp.set_cookie('user_id', value=str(user.id), domain=".code-project-zulu.vercel.app")
-        print(f'This is the cookie: {resp}')
-        return resp
-    else:
-        return jsonify({'error': 'Invalid username or password'})
 
 
 #____________Other_______________ #
