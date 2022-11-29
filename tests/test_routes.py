@@ -1,11 +1,7 @@
-from app import app
-from app import Events
 import unittest
-from unittest.mock import patch
-import requests
-from flask import json
-from flask import jsonify
-import mock
+from app import app, Events
+from flask import json, jsonify
+
 
 def get_random_id():
      all_events = []
@@ -23,7 +19,6 @@ def get_random_id():
 class TestRoutes(unittest.TestCase):
 
         
-
         def setUp(self):
             self.app = app.test_client()
             self.app.testing = True
