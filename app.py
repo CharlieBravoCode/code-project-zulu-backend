@@ -1,9 +1,7 @@
 from flask import Flask, jsonify, make_response,request, session, abort
-from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
+from flask_login import UserMixin, login_user, LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
-from auth import AuthError, requires_auth
-import psycopg2
 import os
 
 
@@ -265,7 +263,6 @@ def login():
 
 #____________Other_______________ #
 
-# Write error handlers for all expected errors
 @app.errorhandler(400)
 def bad_request(error):
     return make_response(jsonify({"error": "Bad request"}), 400)
