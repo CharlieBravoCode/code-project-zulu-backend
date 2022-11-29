@@ -174,7 +174,7 @@ def geteventsgeojson():
 
 
 
-#@cross_origin()  
+@cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["PUT"])
 # @requires_auth
 def update_event(event_id):
@@ -211,6 +211,12 @@ def delete_event(event_id):
         db.session.delete(event)
         db.session.commit()
         return jsonify({"success": True, "response": "Event Deleted"})
+
+# Add the URL '/bad-request' so that it can be handled by the errorhandler.
+@cross_origin()  
+@app.route("/bad-request")
+def bad_request():
+    return jsonify({"error": "Bad request"}), 400
 
 
 
@@ -259,11 +265,10 @@ def login():
 
 #____________Other_______________ #
 
-@app.errorhandler(AuthError)
-def handle_auth_error(ex):
-    response = jsonify(ex.error)
-    response.status_code = ex.status_code
-    return response
+# Write error handlers for all expected errors
+@app.errorhandler(400)
+def bad_request(error):
+    return make_response(jsonify({"error": "Bad request"}), 400)
 
 
 if __name__ == '__app__':
