@@ -10,6 +10,7 @@ import os
 
 #______________________  App ______________________ #
 
+
 app = Flask(__name__)
 CORS(app)
 # app.secret_key = 'ewilgfnoguoe4nrkvnjsnielngoigo4gnnvoilIWFUWBGW93giownglesngjln3ljn3oin((nifneifnldkne'
@@ -173,7 +174,7 @@ def geteventsgeojson():
 
 
 
-@cross_origin()  
+#@cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["PUT"])
 # @requires_auth
 def update_event(event_id):
