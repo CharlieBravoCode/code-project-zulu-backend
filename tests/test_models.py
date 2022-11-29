@@ -1,6 +1,7 @@
 import unittest
 from app import Events
 
+
 class TestEvents(unittest.TestCase):
     def setUp(self): 
         self.event = Events(id=1, identifier="id1", title="My Event", location="NYC", latitud=40.7128, longitud=74.0060)
