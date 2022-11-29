@@ -17,6 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mysecretpassword@
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+
 #### Database in Heroku  ####
 
     # os.environ['DATABASE_URL'] = 'postgresql://iblhdktfqmapza:6a8b46b627797e8879823eccde4731f392eaf852ca37a742b1be3e8fe1c1c531@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dfeftmig21ojqf'
@@ -52,7 +53,6 @@ class Events(db.Model):
 
 @cross_origin()
 @app.route('/events', methods = ['POST'])
-# @requires_auth
 def create_event():
     event_data = request.json
 
@@ -71,14 +71,12 @@ def create_event():
 
 @cross_origin()  
 @app.route("/")
-# @requires_auth
 def home():
     return "Hello World!"
 
 
 @cross_origin()    
 @app.route('/events', methods = ['GET'])
-# @requires_auth
 def getevents():
      all_events = []
      events = Events.query.all()
@@ -98,7 +96,6 @@ def getevents():
 
 @cross_origin() 
 @app.route('/events/geojson', methods = ['GET'])
-# @requires_auth
 def geteventsgeojson():
         points = []
         events = Events.query.all()
@@ -121,7 +118,6 @@ def geteventsgeojson():
 
 @cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["PUT"])
-# @requires_auth
 def update_event(event_id):
     event = Events.query.get(event_id)
     identifier = request.json['identifier']
@@ -145,7 +141,6 @@ def update_event(event_id):
 
 @cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["DELETE"])
-# @requires_auth
 def delete_event(event_id):
     event = Events.query.get(event_id)
 
