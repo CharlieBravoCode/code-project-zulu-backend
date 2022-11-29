@@ -13,13 +13,28 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 #### Local Dev Postgres Docker ####
 
 app.config['SECRET_KEY'] = 'mysecretkey'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres@localhost:5432'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mysecretpassword@localhost:5432'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+#### Database in Heroku  ####
 
-#______________________ Database Tables ______________________ #
+    # os.environ['DATABASE_URL'] = 'postgresql://iblhdktfqmapza:6a8b46b627797e8879823eccde4731f392eaf852ca37a742b1be3e8fe1c1c531@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dfeftmig21ojqf'
+
+    # DATABASE_URL = os.environ['DATABASE_URL']
+    # conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
+    # SQLAlchemy_DATABASE_URI = os.environ['DATABASE_URL']
+    # app.config['SQLALCHEMY_DATABASE_URI'] = SQLAlchemy_DATABASE_URI
+
+    # SECRET_KEY = os.environ.get('SECRET_KEY')
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://iblhdktfqmapza:6a8b46b627797e8879823eccde4731f392eaf852ca37a742b1be3e8fe1c1c531@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dfeftmig21ojqf'
+    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    #### Database Local ####
+    #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:seglniosi3ng9834ogno3ngkldowuez!$rmfmrRJjmelsmfdjUfnerurnfsegom490zj498t23nto(ugneukgbekgdj@localhost/zulu_db_postgres'
+
+
 
 class Events(db.Model):
     __tablename__ = 'events'
@@ -32,11 +47,10 @@ class Events(db.Model):
     longitud = db.Column(db.Float)
 
     def __repr__(self):
-        return "<Event %r>" % self.title 
+        return "<Event %r>" % self.title
 
 
 @cross_origin()
-# @login_required
 @app.route('/events', methods = ['POST'])
 # @requires_auth
 def create_event():
