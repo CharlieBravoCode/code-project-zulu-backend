@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, make_response,request, session, abort
-from flask_login import UserMixin, login_user, LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 from app import app, db
