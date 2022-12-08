@@ -1,7 +1,6 @@
 import logging
-from flask import Flask, jsonify, make_response,request, session, abort
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS, cross_origin
+from flask import jsonify, make_response,request, abort
+from flask_cors import cross_origin
 from app import app, db
 from db import configure_db
 
