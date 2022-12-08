@@ -58,7 +58,7 @@ def getevents():
       all_events = []
       events = Events.query.all()
       for event in events:
-          results = {
+          event_details = {
                     "id":event.id,
                     "identifier":event.identifier,
                     "title":event.title,
@@ -66,7 +66,7 @@ def getevents():
                     "latitud":event.latitud,
                     "longitud":event.longitud
           }
-          all_events.append(results)
+          all_events.append(event_details)
 
       return jsonify(all_events)
     except Exception as e:
