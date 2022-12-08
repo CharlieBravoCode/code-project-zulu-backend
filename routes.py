@@ -1,10 +1,10 @@
+import logging
 from flask import Flask, jsonify, make_response,request, session, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 from app import app, db
 from db import configure_db
 import os
-
 
 configure_db()
 
@@ -26,19 +26,24 @@ class Events(db.Model):
 @cross_origin()
 @app.route('/events', methods = ['POST'])
 def create_event():
-    event_data = request.json
+    try:
+      event_data = request.json
 
-    identifier = event_data['identifier']
-    title  = event_data['title']
-    location = event_data['location']
-    latitud = event_data['latitud']
-    longitud = event_data['longitud']
+      identifier = event_data['identifier']
+      title  = event_data['title']
+      location = event_data['location']
+      latitud = event_data['latitud']
+      longitud = event_data['longitud']
   
-    event = Events(identifier = identifier, title = title, location = location, latitud = latitud, longitud = longitud)
-    db.session.add(event)
-    db.session.commit()    
+      event = Events(identifier = identifier, title = title, location = location, latitud = latitud, longitud = longitud)
+      db.session.add(event)
+      db.session.commit()    
 
-    return jsonify({"success": True,"response":"Event added"})
+      logging.info("Event added")
+      return jsonify({"success": True,"response":"Event added"})
+    except Exception as e:
+      logging.error("Error adding event: " + str(e))
+      return make_response(jsonify({"error": "Error adding event"}), 400)
 
 
 @cross_origin()  
@@ -50,9 +55,10 @@ def home():
 @cross_origin()    
 @app.route('/events', methods = ['GET'])
 def getevents():
-     all_events = []
-     events = Events.query.all()
-     for event in events:
+    try:
+      all_events = []
+      events = Events.query.all()
+      for event in events:
           results = {
                     "id":event.id,
                     "identifier":event.identifier,
@@ -63,44 +69,52 @@ def getevents():
           }
           all_events.append(results)
 
-     return jsonify(all_events)
+      return jsonify(all_events)
+    except Exception as e:
+      logging.error("Error getting events: " + str(e))
+      return make_response(jsonify({"error": "Error getting events"}), 400)
 
 
 @cross_origin() 
 @app.route('/events/geojson', methods = ['GET'])
 def geteventsgeojson():
-        points = []
-        events = Events.query.all()
-        for event in events:
-            points.append({
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [event.longitud, event.latitud]
-                },
-                "properties": {
-                    "title": event.title,
-                    "identifier": event.identifier,
-                    "location": event.location,
-                    "id": event.id
-                }
-            })
-        return jsonify({"type": "FeatureCollection", "features": points})
+    try:
+      points = []
+      events = Events.query.all()
+      for event in events:
+          points.append({
+              "type": "Feature",
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": [event.longitud, event.latitud]
+              },
+              "properties": {
+                  "title": event.title,
+                  "identifier": event.identifier,
+                  "location": event.location,
+                  "id": event.id
+              }
+          })
+      return jsonify({"type": "FeatureCollection", "features": points})
+    except Exception as e:
+      logging.error("Error getting events geojson: " + str(e))
+      return make_response(jsonify({"error": "Error getting events geojson"}), 400)
 
 
 @cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["PUT"])
 def update_event(event_id):
-    event = Events.query.get(event_id)
-    identifier = request.json['identifier']
-    title = request.json['title']
-    location = request.json['location']
-    latitud = request.json['latitud']
-    longitud = request.json['longitud']
+    try:
+      event = Events.query.get(event_id)
+      identifier = request.json['identifier']
+      title = request.json['title']
+      location = request.json['location']
+      latitud = request.json['latitud']
+      longitud = request.json['longitud']
 
-    if event is None:
+      if event is None:
         abort(404)
-    else:
+      else:
         event.identifier = identifier
         event.title = title
         event.location = location
@@ -108,20 +122,29 @@ def update_event(event_id):
         event.longitud = longitud
         db.session.add(event)
         db.session.commit()
+        logging.info("Event updated")
         return jsonify({"success": True, "response": "Event Details updated"})
+    except Exception as e:
+      logging.error("Error updating event: " + str(e))
+      return make_response(jsonify({"error": "Error updating event"}), 400)
 
 
 @cross_origin()  
 @app.route("/events/<int:event_id>", methods = ["DELETE"])
 def delete_event(event_id):
-    event = Events.query.get(event_id)
+    try:
+      event = Events.query.get(event_id)
 
-    if event is None:
+      if event is None:
         abort(404)
-    else:
+      else:
         db.session.delete(event)
         db.session.commit()
+        logging.info("Event deleted")
         return jsonify({"success": True, "response": "Event Deleted"})
+    except Exception as e:
+      logging.error("Error deleting event: " + str(e))
+      return make_response(jsonify({"error": "Error deleting event"}), 400)
 
 
 @cross_origin()  
@@ -137,5 +160,3 @@ def error_handler(error):
 @app.errorhandler(404)
 def handle_error(error):
     return error_handler(error)
-
-
