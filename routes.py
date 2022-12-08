@@ -46,8 +46,8 @@ def create_event():
 
       logging.info("Event added")
       return jsonify({"success": True,"response":"Event added"})
-    except Exception as e:
-      logging.error("Error adding event: " + str(e))
+    except Exception as error:
+      logging.error("Error adding event: " + str(error))
       return make_response(jsonify({"error": "Error adding event"}), 400)
 
 
@@ -69,8 +69,8 @@ def getevents():
           all_events.append(event_details)
 
       return jsonify(all_events)
-    except Exception as e:
-      logging.error("Error getting events: " + str(e))
+    except Exception as error:
+      logging.error("Error getting events: " + str(error))
       return make_response(jsonify({"error": "Error getting events"}), 400)
 
 
@@ -95,8 +95,8 @@ def geteventsgeojson():
               }
           })
       return jsonify({"type": "FeatureCollection", "features": points})
-    except Exception as e:
-      logging.error("Error getting events geojson: " + str(e))
+    except Exception as error:
+      logging.error("Error getting events geojson: " + str(error))
       return make_response(jsonify({"error": "Error getting events geojson"}), 400)
 
 
@@ -123,8 +123,8 @@ def update_event(event_id):
         db.session.commit()
         logging.info("Event updated")
         return jsonify({"success": True, "response": "Event Details updated"})
-    except Exception as e:
-      logging.error("Error updating event: " + str(e))
+    except Exception as error:
+      logging.error("Error updating event: " + str(error))
       return make_response(jsonify({"error": "Error updating event"}), 400)
 
 
@@ -141,8 +141,8 @@ def delete_event(event_id):
         db.session.commit()
         logging.info("Event deleted")
         return jsonify({"success": True, "response": "Event Deleted"})
-    except Exception as e:
-      logging.error("Error deleting event: " + str(e))
+    except Exception as error:
+      logging.error("Error deleting event: " + str(error))
       return make_response(jsonify({"error": "Error deleting event"}), 400)
 
 
