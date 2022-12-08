@@ -1,8 +1,8 @@
-import logging
 from flask import jsonify, make_response,request, abort
 from flask_cors import cross_origin
-from app import app, db
 from db import configure_db
+from app import app, db
+import logging
 
 
 configure_db()
@@ -154,6 +154,7 @@ def bad_request():
 
 def error_handler(error):
     return make_response(jsonify({"error": error.description}), error.code)
+
 
 @app.errorhandler(400)
 @app.errorhandler(404)
