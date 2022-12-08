@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 from app import app, db
 from db import configure_db
-import os
+
 
 configure_db()
 
@@ -21,6 +21,12 @@ class Events(db.Model):
 
     def __repr__(self):
         return "<Event %r>" % self.title
+
+
+@cross_origin()  
+@app.route("/")
+def home():
+    return "Hello World!"
 
 
 @cross_origin()
@@ -44,12 +50,6 @@ def create_event():
     except Exception as e:
       logging.error("Error adding event: " + str(e))
       return make_response(jsonify({"error": "Error adding event"}), 400)
-
-
-@cross_origin()  
-@app.route("/")
-def home():
-    return "Hello World!"
 
 
 @cross_origin()    
