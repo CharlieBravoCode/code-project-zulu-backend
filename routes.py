@@ -130,8 +130,12 @@ def bad_request():
     return jsonify({"error": "Bad request"}), 400
 
 
+def error_handler(error):
+    return make_response(jsonify({"error": error.description}), error.code)
+
 @app.errorhandler(400)
-def bad_request(error):
-    return make_response(jsonify({"error": "Bad request"}), 400)
+@app.errorhandler(404)
+def handle_error(error):
+    return error_handler(error)
 
 
